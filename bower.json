@@ -1,0 +1,31 @@
+{
+  "name": "timeable-behavior",
+  "version": "0.0.1",
+  "authors": [
+    "Alexandre Walsh <awalsh@nexapp.ca>"
+  ],
+  "description": "A behavior that provides timing capabilities",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "timer",
+    "timing",
+    "behavior",
+    "tick"
+  ],
+  "main": "timeable-behavior.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/nexapp/timeable-behavior/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+    "web-component-tester": "*"
+  }
+}

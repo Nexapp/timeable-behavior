@@ -1,0 +1,43 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../timeable-behavior.html">
+
+<dom-module id="demo-timer">
+    <template>
+        <style>
+            p {
+                line-height: 50%;
+            }
+        </style>
+
+        <div>
+            <div>
+                <p><strong>Milliseconds</strong>: <span>{{elapsedTime.milliseconds}}</span></p>
+                <p><strong>Seconds</strong>: <span>{{elapsedTime.seconds}}</span></p>
+                <p><strong>Minutes</strong>: <span>{{elapsedTime.minutes}}</span></p>
+                <p><strong>Hours</strong>: <span>{{elapsedTime.hours}}</span></p>
+                <p><strong>Days</strong>: <span>{{elapsedTime.days}}</span></p>
+            </div>
+
+            <button on-tap="start">Start</button>
+            <button on-tap="pause">Pause</button>
+            <button on-tap="stop">Stop</button>
+            <button on-tap="reset">Reset</button>
+        </div>
+
+        <hr />
+    </template>
+
+    <script>
+        (function() {
+            'use strict';
+
+            Polymer({
+                is: 'demo-timer',
+
+                behaviors: [TimeableBehavior]
+            });
+
+        })();
+    </script>
+
+</dom-module>

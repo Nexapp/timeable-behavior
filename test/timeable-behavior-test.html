@@ -1,0 +1,154 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+    <link rel="import" href="../../test-fixture/test-fixture.html">
+    <link rel="import" href="simple-timer.html">
+  </head>
+  <body>
+
+      <test-fixture id="timer">
+          <template>
+              <simple-timer></simple-timer>
+          </template>
+      </test-fixture>
+
+
+    <script>
+        describe('<timeable-behavior>', function() {
+            var timer;
+            var clock;
+
+            beforeEach(function() {
+                timer = fixture('timer');
+                clock = sinon.useFakeTimers();
+            });
+
+            it('should be active when started', function() {
+                timer.start();
+
+                expect(timer.active).to.be.equal(true);
+            });
+
+            it('should be inactive when pausing a started timer', function() {
+                timer.start();
+
+                timer.pause();
+
+                expect(timer.active).to.be.equal(false);
+            });
+
+            it('should be inactive when stopping a started timer', function() {
+                timer.start();
+
+                timer.stop();
+
+                expect(timer.active).to.be.equal(false);
+            });
+
+            it('should not affect the timer state when resetting', function() {
+                timer.start();
+
+                timer.reset();
+
+                expect(timer.active).to.be.equal(true);
+            });
+
+            it('should tick at the same frequency as the provided property', function() {
+                timer.tickFrequency = 100;
+                timer.start();
+
+                clock.tick(550);
+
+                expect(timer.elapsedTime.milliseconds).to.be.equal(500);
+            });
+
+            it('should not reset elapsed time when pausing', function() {
+                timer.start();
+
+                clock.tick(2000);
+                timer.pause();
+
+                expect(timer.elapsedTime.milliseconds).to.be.equal(2000);
+            });
+
+            it('should set elapsed time back to zero when stopping', function() {
+                timer.start();
+
+                clock.tick(1500);
+                timer.stop();
+
+                expect(timer.elapsedTime.milliseconds).to.be.equal(0);
+            });
+
+            it('should set elapsed time back to zero when resetting', function() {
+                timer.start();
+
+                clock.tick(1500);
+                timer.reset();
+
+                expect(timer.elapsedTime.milliseconds).to.be.equal(0);
+            });
+
+            it('will set tick frequency to its default value if a negative parameter is provided', function() {
+                timer.tickFrequency = -5;
+
+                expect(timer.tickFrequency).to.be.equal(1000);
+            });
+
+            it('will set milliseconds to zero if a negative parameter is provided', function() {
+                timer.initialTime = -800;
+
+                expect(timer.elapsedTime.milliseconds).to.be.equal(0);
+            });
+
+            it('will return one day given the equivalent in milliseconds', function() {
+                timer.initialTime = 86400000;
+
+                expect(timer.elapsedTime.days).to.be.equal(1);
+            });
+
+            it('will return one hour given the equivalent in milliseconds', function() {
+                timer.initialTime = 3600000;
+
+                expect(timer.elapsedTime.hours).to.be.equal(1);
+            });
+
+            it('will return one minute given the equivalent in milliseconds', function() {
+                timer.initialTime = 60000;
+
+                expect(timer.elapsedTime.minutes).to.be.equal(1);
+            });
+
+            it('will return one second given the equivalent in milliseconds', function() {
+                timer.initialTime = 1000;
+
+                expect(timer.elapsedTime.seconds).to.be.equal(1);
+            });
+
+            it('will return the same amount of milliseconds as the provided initial time', function() {
+                timer.initialTime = 580;
+
+                expect(timer.elapsedTime.milliseconds).to.be.equal(580);
+            });
+        });
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,159 @@
+<script>
+    /*
+     * Use TimeableBehavior to implement an element with timing capabilities.
+     *
+     *     <my-timer-impl></my-timer-impl>
+     *
+     *     <my-timer-impl initial-time="1000" tick-frequency="500" active></my-timer-impl>
+     *
+     * @polymerBehavior
+     * @demo demo/index.html
+     */
+    TimeableBehavior = {
+
+        properties: {
+            /**
+             * The current elapsed time. The object takes the following form:
+             *   <pre>
+             *   <code>
+             *   {
+             *      milliseconds: 86400000,
+             *      seconds: 86400,
+             *      minutes: 1440,
+             *      hours: 24,
+             *      days: 1
+              *   }
+             *   </code>
+             *   </pre>
+             *
+             * @attribute elapsedTime
+             * @type Object
+             * @default 0
+             */
+            elapsedTime: {
+                type: Object,
+                readonly: true,
+                notify: true
+            },
+
+            /**
+             * If true, the timer is ticking.
+             *
+             * @attribute active
+             * @type Boolean
+             * @default false
+             */
+            active: {
+                type: Boolean,
+                notify: true,
+                value: false
+            },
+
+            /**
+             * The number of milliseconds to elapse between each ticks. Negative values set it back to its default value.
+             *
+             * @attribute tickFrequency
+             * @type Number
+             * @default 1000
+             */
+            tickFrequency: {
+                type: Number,
+                value: 1000,
+                notify: true,
+                observer: '_tickFrequencyChanged'
+            },
+
+            /**
+             * The number of milliseconds elapsed. Negative values set it back to 0.
+             *
+             * @attribute initialTime
+             * @type Number
+             * @default 0
+             */
+            initialTime: {
+                type: Number,
+                value: 0,
+                observer: '_initialTimeChanged'
+            },
+
+            _millisecondsElapsed: {
+                type: Number,
+                value: 0,
+                observer: '_millisecondsChanged'
+            }
+        },
+
+        ready: function() {
+            if ( this.active ) {
+                this.async(this._updateTime, this.tickFrequency);
+            }
+        },
+
+        /**
+         * Start or resume the ticks.
+         */
+        start: function() {
+            if ( !this.active ) {
+                this.active = true;
+                this.async(this._updateTime, this.tickFrequency);
+            }
+        },
+
+        _updateTime: function() {
+            if ( this.active ) {
+                this._millisecondsElapsed = this._millisecondsElapsed + this.tickFrequency;
+                this.async(this._updateTime, this.tickFrequency);
+            }
+        },
+
+        /**
+         * Pause the timer. It does not reset the elapsed time.
+         */
+        pause: function() {
+            this.active = false;
+        },
+
+        /**
+         * Stop the ticks and reset the timer.
+         */
+        stop: function() {
+            this.active = false;
+            this.reset();
+        },
+
+        /**
+         * Set the elapsed time back to zero. It doesn't affect the active state.
+         */
+        reset: function() {
+            this._millisecondsElapsed = 0;
+        },
+
+        _millisecondsChanged: function() {
+            var seconds = this._millisecondsElapsed / 1000;
+            var minutes = seconds / 60;
+            var hours = minutes / 60;
+            var days = hours / 24;
+            this.elapsedTime = {
+                milliseconds: this._millisecondsElapsed,
+                seconds: seconds,
+                minutes: minutes,
+                hours: hours,
+                days: days
+            };
+        },
+
+        _tickFrequencyChanged: function() {
+            if ( this.tickFrequency < 0 ) {
+                this.tickFrequency = 1000;
+            }
+        },
+
+        _initialTimeChanged: function() {
+            if ( !this.initialTime || this.initialTime < 0 ) {
+                this._millisecondsElapsed = 0;
+            } else {
+                this._millisecondsElapsed = this.initialTime;
+            }
+        }
+    };
+</script>
