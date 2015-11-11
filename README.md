@@ -47,7 +47,7 @@ Once running, you can preview the element at
 Simply navigate to the `/test` directory of your element to run its tests. If
 you are using Polyserve: `http://localhost:8080/components/timeable-behavior/test/`
 
-#### web-component-tester
+#### web-component-tester 
 
 The tests are compatible with [web-component-tester](https://github.com/Polymer/web-component-tester).
 Install it via:
